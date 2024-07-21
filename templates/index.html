@@ -46,6 +46,7 @@
       max-width: 100%;
       border-radius: 8px;
       margin-bottom: 15px;
+      cursor: pointer;
     }
     .item h2 {
       font-size: 1.2em;
@@ -71,6 +72,42 @@
     .item .status.sold {
       color: #e74c3c; /* Red for SOLD */
     }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .modal img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -83,13 +120,35 @@
           <p class="status reserved">{{ item['Status'] }}</p>
         {% elif item['Status'] == 'SOLD' %}
           <p class="status sold">{{ item['Status'] }}</p>
-        {% else %}
-          <p class="price">${{ item['Price'] }}</p>
+        {% elif item['Status'] == 'Published' %}
+          <p class="price">{{ item['Price'] }}{% if item['Price'] %}€{% endif %}</p>
         {% endif %}
-        <img src="{{ item['Image URL'] }}" alt="{{ item['Title'] }}">
+        {% set item_id = item['Internal ID'] %}
+        {% if item_id in images %}
+          {% set first_image = images[item_id][0] %}
+          <img src="{{ url_for('uploaded_file', filename=first_image) }}" alt="{{ item['Title'] }}" onclick="openModal('{{ item_id }}')">
+          <div id="modal-{{ item_id }}" class="modal">
+            <div class="modal-content">
+              <span class="close" onclick="closeModal('{{ item_id }}')">&times;</span>
+              {% for image in images[item_id] %}
+                <img src="{{ url_for('uploaded_file', filename=image) }}" alt="{{ item['Title'] }}">
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
         <p>{{ item['Description'] }}</p>
       </div>
     {% endfor %}
   </div>
+
+  <script>
+    function openModal(itemId) {
+      document.getElementById('modal-' + itemId).style.display = 'block';
+    }
+
+    function closeModal(itemId) {
+      document.getElementById('modal-' + itemId).style.display = 'none';
+    }
+  </script>
 </body>
 </html>
