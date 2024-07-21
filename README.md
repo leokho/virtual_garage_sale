@@ -6,8 +6,8 @@ This is a simple Flask-based web application that allows you to create a virtual
 
 - Upload a CSV file to list items for sale.
 - Display items with title, description, price, status, and image.
-- Color-coded status labels for RESERVED (orange) and SOLD (red).
 - Responsive and mobile-friendly design.
+- Support for multiple images with the following format <internal_id>_<id_nr>
 
 ## Requirements
 
@@ -49,13 +49,13 @@ The CSV file should have the following columns:
 - `Title`: The title of the item.
 - `Description`: A description of the item.
 - `Price`: The price of the item.
-- `Status`: The status of the item (e.g., AVAILABLE, RESERVED, SOLD).
-- `Image URL`: The URL of the item's image.
+- `Status`: The status of the item (Available, Reserved, Sold).
+- `Internal ID`: An internal ID of the item to be associated with an image. The internal ID cannot contain spaces.
 
 ### Example CSV
 
 ```csv
-Title,Description,Price,Status,Image URL
-Bike,Mountain bike in good condition,150,Available,https://example.com/images/bike.jpg
-Laptop,15 inch laptop with 8GB RAM,300,RESERVED,https://example.com/images/laptop.jpg
-Table,Wooden dining table,100,SOLD,https://example.com/images/table.jpg
+Internal ID,Title,Description,Price,Status
+bike,Bike,Mountain bike in good condition,150,Available
+laptop,Laptop,15 inch laptop with 8GB RAM,300,Reserved
+wooden_table,Table,Wooden dining table,100,Sold
